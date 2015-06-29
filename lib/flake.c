@@ -25,10 +25,18 @@
 * THE SOFTWARE.
 *****************************************************************************/
 #define _GNU_SOURCE
+#include <stdio.h>
+#include <errno.h>
+#include <limits.h>
+#include <stdbool.h>
+#include <stdlib.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <time.h>
+
 #include "sysflake.h"
+
+void sysflake_check(void) __attribute__((constructor));
 
 #define TIME_BIT_SIZE       37
 #define TID_BIT_SIZE        17
@@ -77,3 +85,46 @@ int64_t sysflake_generate(void)
     counter += 1;
     return flake;
 }
+
+void sysflake_check(void)
+{
+    FILE *stream;
+    char *line = NULL;
+    size_t len = 0;
+
+    stream = fopen("/proc/sys/kernel/pid_max", "r");
+    if (stream != NULL)
+    {
+        ssize_t read;
+
+        read = getline(&line, &len, stream);
+        if (read != -1)
+        {
+            char *temp;
+            bool ret = true;
+            unsigned long int pid_max;
+            errno = 0;
+
+            pid_max = strtoul(line, &temp, 0);
+            if (temp == line ||
+                    ((pid_max == LONG_MIN || pid_max == LONG_MAX) && errno == ERANGE))
+            {
+                ret = false;
+            }
+
+            if(ret == true)
+            {
+                if(pid_max > (1 << TID_BIT_SIZE))
+                {
+                    fprintf(stderr, "Sysflake error:\n");
+                    fprintf(stderr, "/proc/sys/kernel/pid_max is too big on your system!\n");
+                    exit(EXIT_FAILURE);
+                }
+            }
+        }
+
+        free(line);
+        fclose(stream);
+    }
+}
+
