@@ -29,6 +29,6 @@
 
 int main(void)
 {
-    printf("%016llX", sysflake_generate());
+    printf("%016llX\n", sysflake_generate());
     return 0;
 }
