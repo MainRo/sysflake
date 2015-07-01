@@ -6,12 +6,12 @@ library can be used from command line via the "sysflake" tool, or from c code.
 Sysflake is inspired form simpleflake, but adapted to runtime standalone linux
 systems. It runs in a library embedded in each process that needs to generate
 ids. No deamon is running. Sysflake can generate 1024 unique ids per thread per
-millisecond for more than 8 years. 
+millisecond for more than 4 years.
 
 ## When Can I Use Sysflake ?
 
 If you need to generate a reasonable number of runtime unique ids on your system
-then sysflake can be a solution. Sysl
+then sysflake can be a solution.
 
 ## When Should I NOT Use Sysflake ?
 
@@ -37,4 +37,22 @@ from the following information:
 - timestamp is a 37 bits milli-seconds time.
 - thread is the 17 bits linux thread id.
 - counter is a 10 bits counter to ensure id uniqueness within a milli-second.
+
+# Usage
+
+## From Command Line
+
+you can use sysflake from script via the sysflake tool:
+
+    $ sysflake
+    002906A15CABF400
+
+## From C Code
+
+    #include "sysflake.h"
+
+    void foo(void)
+    {
+        int64_t flake = sysflake_generate();
+    }
 
