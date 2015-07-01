@@ -3,10 +3,10 @@
 Sysflake is a library that can be used to generate a system unique id. This
 library can be used from command line via the "sysflake" tool, or from c code.
 
-Sysflake is inspired form simpleflake, but adapted to runtime standalone linux
-systems. It runs in a library embedded in each process that needs to generate
-ids. No deamon is running. Sysflake can generate 1024 unique ids per thread per
-millisecond for more than 4 years.
+Sysflake is inspired from simpleflake, but adapted to generate runtime ids on
+standalone linux systems. It runs in a library embedded in each process that
+needs to generate ids. No deamon is running. Sysflake can generate 1024 unique
+ids per thread per millisecond for more than 4 years.
 
 ## When Can I Use Sysflake ?
 
@@ -15,11 +15,11 @@ then sysflake can be a solution.
 
 ## When Should I NOT Use Sysflake ?
 
-If you need persitant unique ids, unique ids accross several devices, ids that
+If you need persitant unique ids, unique ids between several devices, ids that
 must be hard to guess form a security point of view, then sysflake is not the
 tool you need.
 
-if you need to generate more than 1024 id per millisecond from the same thread
+if you need to generate more than 1024 ids per millisecond from the same thread
 then sysflake is not the tool you need.
 
 If you increased the default value of "/proc/sys/kernel/pid_max" on a 64 bits
@@ -27,7 +27,7 @@ linux kernel, sysflake does not work.
 
 # Specification
 
-a flake is encoded as a 64 bits signed integer (int64_t). Its content is built
+A flake is encoded as a 64 bits signed integer (int64_t). Its content is built
 from the following information:
 
     +-----------+--------+---------+
@@ -56,3 +56,4 @@ you can use sysflake from script via the sysflake tool:
         int64_t flake = sysflake_generate();
     }
 
+In case or error, sysflake_generate returns 0.
