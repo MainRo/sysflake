@@ -1,0 +1,8 @@
+*.o
+*.lo
+*.la
+*.in
+*.swp
+.libs
+configure
+config.*
