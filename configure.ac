@@ -19,7 +19,7 @@ LT_INIT
 AC_CHECK_HEADERS([fcntl.h stdlib.h string.h sys/param.h unistd.h stdbool.h])
 
 # check for libraries
-PKG_CHECK_MODULES([CPPUTEST], [cpputest >= 3.6], 
+PKG_CHECK_MODULES([CPPUTEST], [cpputest >= 3.6],
       [have_cpputest=yes], [have_cpputest=no])
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -28,8 +28,9 @@ PKG_CHECK_MODULES([CPPUTEST], [cpputest >= 3.6],
 #AC_TYPE_SSIZE_T
 
 # Checks for library functions.
-#AC_CHECK_FUNCS([getcwd memset mkdir strcasecmp strchr strdup])
-
+AC_SEARCH_LIBS([clock_gettime], [rt], [], [
+  AC_MSG_ERROR([unable to find the clock_gettime() function])
+])
 
 AC_CONFIG_FILES([Makefile lib/Makefile src/Makefile test/Makefile])
 AM_CONDITIONAL([COND_CPPUTEST], [test "x${have_cpputest}" = xyes])
